@@ -11,6 +11,60 @@ $(function(){
                 </div>
               </div>`;
     msgBody.html(msgList);
+	$(document).on("keypress", function(e){
+       if (e.which == 13) {
+           var msg = $('#msg');
+
+		if (msg.val() == "") {
+		} else {
+			msgList += `<div class="d-flex justify-content-end mb-4">
+                <div class="msg_cotainer_send">
+                ${msg.val()}
+                </div>
+                <div class="img_cont_msg">
+                  <img src="img/user1.png" class="rounded-circle user_img_msg">
+                </div>
+              </div>`;
+              msgBody.html(msgList);
+              if(k == 6){""
+              	msg.attr("disabled", "");
+              }
+             var formData = new FormData();
+             formData.append('pssid', 'kjkjw838a3a839a0a');
+             formData.append('msg', msg.val());
+             formData.append('msgid', k);
+			$.ajax({
+			method : 'POST',
+			url : 'http://localhost/chatbot/chat.php',
+			processData : false,
+			contentType : false,
+			data : formData,
+			success : function(responseTxt, statusTxt, xhr){
+				// k++;
+				var data = JSON.parse(responseTxt);
+				if(data == ''){
+					alert('ajax:null');
+				} else{
+					k = Number(data.k);
+					msgList += `<div class="d-flex justify-content-start mb-4">
+					                <div class="img_cont_msg">
+					                  <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
+					                </div>
+					                <div class="msg_cotainer">
+					                  ${data.msg}
+					                </div>
+					              </div>`;
+				}
+				msgBody.html(msgList);
+			},
+			error : function(responseTxt, statusTxt, xhr){
+				alert('ajax:error');
+			}
+		});
+			msg.val('');
+		}
+       } 
+    });
 	$('#submit').click(function(){
 		var msg = $('#msg');
 
